@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#
+# Run offlineimap every interval and notify for new mail.
+#
+
+interval=120
+maildir="$HOME/.mail/gmail"
+newbox="INBOX/new"
+maildirs="$HOME/.mail/gmail/INBOX/new/"
+never_new_dirs="archive sent"
+
+newmail_dir="$maildir/$newbox"
+
+while true; do
+    # run offlineimap just once
+    offlineimap -o &> "$HOME/.offlineimap/log"
+
+    # get number of new emails
+    newmail="$(find $maildirs -type f | wc -l)"
+
+    if [[ $newmail > 0 ]]; then
+        echo $newmail
+        notify-send "New mail!"
+    fi
+
+    # wait for a while
+    sleep $interval
+done

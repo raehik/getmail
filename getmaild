@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#
+# ayy lmao
+#
+
+# nohup detaches a program *fully* from a tty
+nohup getmail &> "/dev/null" &
