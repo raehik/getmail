@@ -20,7 +20,7 @@ while true; do
 
     if [[ $newmail > 0 ]]; then
         echo $newmail
-        notify-send "New mail!"
+        notify-send "New mail!" -u low
     fi
 
     # wait for a while
