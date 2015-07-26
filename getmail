@@ -4,24 +4,30 @@
 #
 
 interval=120
-maildir="$HOME/.mail/gmail"
-newbox="INBOX/new"
-maildirs="$HOME/.mail/gmail/INBOX/new/"
-never_new_dirs="archive sent"
+mail_dir="$HOME/mail/gmail"
+new_box="INBOX"
 
-newmail_dir="$maildir/$newbox"
+new_mail_dir="$mail_dir/$new_box/new"
 
 while true; do
     # run offlineimap just once
     offlineimap -o &> "$HOME/.offlineimap/log"
 
     # get number of new emails
-    newmail="$(find $maildirs -type f | wc -l)"
+    new_mails_num=$(find "$new_mail_dir" -type f | wc -l)
 
-    if [[ $newmail > 0 ]]; then
-        echo $newmail
+    # if we have any new email
+    if [[ $new_mails_num > 0 ]]; then
+        # notify for new mail
         notify-send "New mail!" -u low
+
+        # filter each new mail with procmail
+        for file in "$new_mail_dir"/*; do
+            # -p keeps env. vars. so we have the DBUS session address etc.
+            procmail -p < "$file"
+        done
     fi
+
 
     # wait for a while
     sleep $interval
